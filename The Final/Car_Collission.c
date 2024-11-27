@@ -1,12 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <stdio.h> // for input and output
+#include <stdlib.h> // for rand function
+#include <time.h> // for time(0) // 1970 abhe tak jitnay seconds 
+#include <string.h>  // for strcpy,strcmp,strlen
 #include <conio.h>   // For _kbhit() and _getch()
 #include <windows.h> // For Sleep()
-#include<string.h>
-#define ROAD_WIDTH 40
-#define ROAD_HEIGHT 20
-#define CAR_POS (ROAD_WIDTH / 2)
+#include <limits.h> // for INT_MAX AND INT_MIN
+// global
+#define ROAD_WIDTH 40 // columns
+#define ROAD_HEIGHT 20 // rows
+#define CAR_POS (ROAD_WIDTH / 2) // middle of road
+
 struct signin{
 	char name[100];
 	char password[100];
@@ -14,24 +17,49 @@ struct signin{
 	int max;
 	int react;
 }obj;
-char road[ROAD_HEIGHT][ROAD_WIDTH];
-void init_road();
+
+char road[ROAD_HEIGHT][ROAD_WIDTH]; // 2D array of Rows = height and columns = width 
+// Prototypes
+void init_road(); 
 void display_road(int car_position, int obstacles[] );
-void move_obstacles(int* obstacles);
+void move_obstacles(int *obstacles);
 int check_collision(int car_position, int* obstacles);
 void pause_game();
 int play();
 void play_mp3(const char *filename);
 void printCar();
 //FILE HANDLING FUNCTIONS
+
 void sign_up();
 void sign_in();
 void update_score(char name[100],FILE *p1);
 void leaderbord();
 
+
+void display_road(int car_position, int obstacles[] ) {
+	system("cls"); 
+int i,j;
+    for (i = 0; i < ROAD_HEIGHT; i++) {
+        printf("                "); 
+
+        for (j = 0; j < ROAD_WIDTH; j++) {
+            if (i == ROAD_HEIGHT - 1 && j == car_position) {
+                printf("A"); 
+            } else if (obstacles[i] == j && j!=0) {
+                printf("X");
+            } else {
+                printf("%c", road[i][j]);
+            }
+        }
+        printf("\n");
+    }     
+}
+
 int main(){
-    int choice;
+	int check;
+    
     printCar();
+    int choice;
     while (1) {
         printf("\nMenu:\n");
         printf("1. Sign Up\n");
@@ -39,8 +67,21 @@ int main(){
         printf("3. View Leaderboard\n");
         printf("4. Exit\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
-
+        check = scanf("%d", &choice);
+        if (check!=1){
+        	printf("Invalid data type");
+        	while (getchar() != '\n'); // discard the left over invalid data in input buffer
+			// clearing the input buffer for valid data
+			
+		}
+		else if( choice< 1 || choice >4){
+			printf("Out Of Valid Range!");
+			
+		
+		}
+		
+		else{
+		
         switch (choice) {
             case 1:
                 sign_up();
@@ -49,14 +90,17 @@ int main(){
                 sign_in();
                 break;
             case 3:
-//                leaderbord();
+                leaderbord();
                 break;
             case 4:
                 printf("Exiting program.\n");
                 return 0;
             default:
                 printf("Invalid choice! Please try again.\n");
+                break;
         }
+    }
+    
         
         
     }
@@ -76,173 +120,186 @@ void init_road() {
     }
 }
 
-void display_road(int car_position, int obstacles[] ) {
-    system("cls"); 
-int i,j;
-    for (i = 0; i < ROAD_HEIGHT; i++) {
-        printf("                "); 
-
-        for (j = 0; j < ROAD_WIDTH; j++) {
-            if (i == ROAD_HEIGHT - 1 && j == car_position) {
-                printf("A"); 
-            } else if (obstacles[i] == j) {
-                printf("X");
-            } else {
-                printf("%c", road[i][j]);
-            }
-        }
-        printf("\n");
-    }     
-}
+ 
 
 void move_obstacles(int* obstacles) {
 	int i;
-    for (i = ROAD_HEIGHT - 1; i > 0; i--) {
-        obstacles[i] = obstacles[i - 1];
+    for (i = ROAD_HEIGHT - 1; i > 0; i--) { // loop from width(max column) to 1
+        obstacles[i] = obstacles[i - 1]; // update the obstacles to move down on road
     }
-    obstacles[0] = rand() % (ROAD_WIDTH - 2) + 1; 
+    obstacles[0] = rand() % (ROAD_WIDTH - 2) + 1;  // @ 0 border , @ width -1 border exsists
+    // rand() % (100) ==> generates  a random number between 0 and 100 
+    
 }
 
 int check_collision(int car_position, int* obstacles) {
-    return (obstacles[ROAD_HEIGHT - 1] == car_position);
+    return (obstacles[ROAD_HEIGHT - 1] == car_position); // value @ last index of array becomes equal to the column where car exits
 }
 
 void pause_game() {
-    printf("Game Paused. Press any key to continue...\n");
-    _getch(); 
+    printf("Game Paused. Press any key to continue...\n");    
+    _getch();  // inputs a character .. waits for input
 }
 
 int play(){
-	    int car_position = CAR_POS;
+	int car_position = CAR_POS; // width /2
     int obstacles[ROAD_HEIGHT] = {0};
     int game_over = 0;
     int score = 0;
     int delay = 100; 
 
-    srand(time(0)); 
+    srand(time(0)); // seconds from 1970;  neceesary for rand();
     init_road();
 
 
     
-    printf("Press 1 TO Enter The Game: ");
+    printf("Press 1 To Enter The Game or  0 to exit: ");
     int num;
-    scanf("%d", &num);
-    
-    if (num == 1) {
-    	
-    	play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\start.mp3");
-    	Sleep(800);
-    	
-
-
-        printf("               _____ \n");
-    printf("              |___ / \n");
-    printf("                |_ \\ \n");
-    printf("               ___) |\n");
-    printf("              |____/ \n");
-    	Sleep(1100);
-	printf("               ____  \n");
-    printf("              |___ \\ \n");
-    printf("                __) | \n");
-    printf("               / __/ \n");
-    printf("              |_____| \n");
-    	Sleep(1100);
-	printf("                ___     \n");
-    printf("               / / |    \n");
-    printf("              /_/| |     \n");
-    printf("                 | |     \n");
-    printf("                _|_|_     \n");
-    printf("               |_ _ _|     \n");
-    	Sleep(900);
-    printf("           ____ _____ _    ______ _____  \n");
-    printf("         / ___|_   _|/ \\  |  _ \\_   _|  \n");
-    printf("         \\___ \\ | | / _ \\ | |_) || |   \n");
-    printf("          ___) || |/ ___ \\|  _ < | | \n");
-    printf("         |____/ |_/_/   \\_\\_| \\_\\|_| \n");
-    	Sleep(100);
-
-mciSendString("stop myMP3", NULL, 0, NULL);
-mciSendString("close myMP3", NULL, 0, NULL);
-
-
-		play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\mario1.mp3");
-
+    int res;
+	while(1){
+		res = scanf("%d",&num);
+		while(getchar()!='\n'); // clear input buffer for new input
 		
-        while (!game_over) {
-            if (_kbhit()) {  
-                char key = _getch();
-                if (key == 'a' && car_position > 1) {
-                    car_position--; 
-                } else if (key == 'd' && car_position < ROAD_WIDTH - 2) {
-                    car_position++;
-                } else if (key == 'p') { 
-                    pause_game();
-                }
-                
+		if( res!=1){
+			printf("Ivalid DataType\n Please Enter 1 to enter game or 0 to exit");
+		}
+		else if (num!=1 && num!=0){
+			printf("Out of Range\n");
+			printf("Enter 1 to Enter game or 0 to exit");
+	}
+		else{
+			if (num==0){
+				return 0;  
+			}
+			break;
+		}
+		
+	}
 
-            }
+	    	
+	    	play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\start.mp3");
+	    	Sleep(800);
+	    	
+	
+	
+	        printf("               _____ \n");
+	    printf("              |___ / \n");
+	    printf("                |_ \\ \n");
+	    printf("               ___) |\n");
+	    printf("              |____/ \n");
+	    	Sleep(1100);
+		printf("               ____  \n");
+	    printf("              |___ \\ \n");
+	    printf("                __) | \n");
+	    printf("               / __/ \n");
+	    printf("              |_____| \n");
+	    	Sleep(1100);
+		printf("                ___     \n");
+	    printf("               / / |    \n");
+	    printf("              /_/| |     \n");
+	    printf("                 | |     \n");
+	    printf("                _|_|_     \n");
+	    printf("               |_ _ _|     \n");
+	    	Sleep(900);
+	    printf("           ____ _____ _    ______ _____  \n");
+	    printf("         / ___|_   _|/ \\  |  _ \\_   _|  \n");
+	    printf("         \\___ \\ | | / _ \\ | |_) || |   \n");
+	    printf("          ___) || |/ ___ \\|  _ < | | \n");
+	    printf("         |____/ |_/_/   \\_\\_| \\_\\|_| \n");
+	    	Sleep(100);
+	
+	mciSendString("stop myMP3", NULL, 0, NULL);
+	mciSendString("close myMP3", NULL, 0, NULL);
+	
+	
+			play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\mario1.mp3");
+	
+			
+	        while (!game_over) { // game over becomes 1 on collision from check_collision module.
+	            if (_kbhit()) {   // _kbhit return non zero if key pressed and 0 if not .
+	                char key = _getch(); // getch takes input character without need to press enter
+	                if (key == 'a' && car_position > 1) { // >1 ensures car doesnot go beyond left border
+	                    car_position--; 
+	                } else if (key == 'd' && car_position < ROAD_WIDTH - 2) { // , width ensures that car does not go beyong right border of road
+	                    car_position++;
+	                } else if (key == 'p') { 
+	                    pause_game(); // pause game call _getch . which means program waits untill a character is pressed.
+	                }
+	                
+	
+	            }
+			
+	            move_obstacles(obstacles); // calling to update position of obstacles
+	            game_over = check_collision(car_position, obstacles); // checking for collisiion
+	
+	            display_road(car_position, obstacles); // ouput current state of road
+	            
+	           printf("                Score: %d\n", score++); 
+	
+	            // Gradually decrease delay to increase speed
+	            if (score % 10 == 0 && delay > 0) {
+	                delay -= 10; // Reduce delay every 10 points, with a minimum limit
+	            }
+	
+	            Sleep(delay);   // controls speed of game.
+	    }
+	     //    	                 Stop the background music
+	mciSendString("stop myMP3", NULL, 0, NULL);
+	mciSendString("close myMP3", NULL, 0, NULL);
+	
+	// Play the death sound
+	play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\death.mp3");
+	    	
+	        printf("\n\n                Game Over! Final Score: %d\n", score);
+	        Sleep(2500);
+	         mciSendString("stop myMP3", NULL, 0, NULL);
+	mciSendString("close myMP3", NULL, 0, NULL);
+	    
+	    
+	
 
-            move_obstacles(obstacles);
-            game_over = check_collision(car_position, obstacles);
-
-            display_road(car_position, obstacles);
-            
-           printf("                Score: %d\n", score++); 
-
-            // Gradually decrease delay to increase speed
-            if (score % 10 == 0 && delay > 0) {
-                delay -= 10; // Reduce delay every 10 points, with a minimum limit
-            }
-
-            Sleep(delay); 
-    }
-     //    	                 Stop the background music
-mciSendString("stop myMP3", NULL, 0, NULL);
-mciSendString("close myMP3", NULL, 0, NULL);
-
-// Play the death sound
-play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\death.mp3");
-    	
-        printf("\n\n                Game Over! Final Score: %d\n", score);
-        Sleep(2500);
-         mciSendString("stop myMP3", NULL, 0, NULL);
-mciSendString("close myMP3", NULL, 0, NULL);
-    }
-    return score;
+return score; // returns score to update score in files
 }
+
+//FILE HANDLING FUNCTIONS
+void sign_up();
+void sign_in();
+void update_score(char name[100],FILE *p1);
+void leaderbord();
 
 void sign_up(){
 	FILE *p1=fopen("data1.txt","a+");
 	char name[100];
 	char pass[100];
 	int present=0,i;
-	printf("Enter your name:");
-	scanf("%s",name);
-	while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
-		if(strcmp(obj.name,name)==0){
-			present=1;
-			break;
-		}
+printf("Enter your name:");
+scanf("%s",name);
+while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
+	if(strcmp(obj.name,name)==0){
+		present=1;
+		break;
 	}
-	if (present==1){
-		printf("The Name Already Exists");
-	}
-	else if(present==0){
-//	printf("%d",present);
-	printf("Enter your password:");
-	scanf("%s",pass);
-	for(i=0;i<3;i++){
-		obj.scores[i]=0;
-	}
-	obj.max=0;
-	obj.react=0;
-	fprintf(p1,"\n");
-	fprintf(p1,"%s %s %d %d %d %d",name,pass,obj.scores[0],obj.scores[1],obj.max,obj.react);
-	printf("Email Successfully Added\n");
-
 }
+if (present==1){
+	printf("The Name Already Exists\n");
 	fclose(p1);
-	sign_in();
+}
+else if(present==0){
+//	printf("%d",present);
+printf("Enter your password:");
+scanf("%s",pass);
+for(i=0;i<3;i++){
+	obj.scores[i]=0;
+}
+obj.max=0;
+obj.react=0;
+fprintf(p1,"\n");
+fprintf(p1,"%s %s %d %d %d %d",name,pass,obj.scores[0],obj.scores[1],obj.max,obj.react);
+printf("Email Successfully Added\n");
+fclose(p1);
+sign_in();
+}
+
 }
 
 void sign_in(){
@@ -268,7 +325,7 @@ void sign_in(){
   if(check==0){
   	printf("Invalid Email Or Password");
   }
- fclose(p1);
+// fclose(p1);
 }
 
 
@@ -302,41 +359,42 @@ remove("data1.txt");
 rename("temp.txt","data1.txt");
 }	
 
-//void leaderbord(){
-//	int i=0,count=0,j,temp=0;
-//	FILE *p1=fopen("data1.txt","r");
-//	 while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
-//       count++;       
-//  }
-//  fseek(p1,0,SEEK_SET);
-//  
-// int a[count];
-//  while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
-//     a[i]=obj.max;
-//    i++;
-//  }
-//
-//
-//  for(i=0;i<count;i++){
-//  	for(j=i+1;j<count;j++){
-//  		if(a[j]>a[i]){
-//  			temp=a[i];
-//  			a[i]=a[j];
-//  			a[j]=temp;
-//		  }
-//	  }
-//  }
-//  i=0;
-//  fseek(p1,0,SEEK_SET);
-//  while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
-//     if(obj.max==a[i]&&i<2){
-//     	printf("Rank %d: %s %d\n",i+1,obj.name,obj.max);
-//     	i++;
-//     	fseek(p1,0,SEEK_SET);
-//	 }
-//  }
-//
-//}
+void leaderbord(){
+	int i=0,count=0,j,temp=0;
+	FILE *p1=fopen("data1.txt","r");
+	 while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
+       count++;       
+  }
+  fseek(p1,0,SEEK_SET);
+  
+ int a[count];
+  while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
+     a[i]=obj.max;
+    i++;
+  }
+
+
+  for(i=0;i<count;i++){
+  	for(j=i+1;j<count;j++){
+  		if(a[j]>a[i]){
+  			temp=a[i];
+  			a[i]=a[j];
+  			a[j]=temp;
+		  }
+	  }
+  }
+  i=0;
+  fseek(p1,0,SEEK_SET);
+  while(fscanf(p1,"%s %s %d %d %d %d",obj.name,obj.password,&obj.scores[0],&obj.scores[1],&obj.max,&obj.react)==6){
+     if(obj.max==a[i]&&i<2){
+     	printf("Rank %d: %s %d\n",i+1,obj.name,obj.max);
+     	i++;
+     	fseek(p1,0,SEEK_SET);
+	 }
+  }
+
+}
+
 
 void printCar() {
 	
