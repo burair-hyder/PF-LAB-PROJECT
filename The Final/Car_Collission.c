@@ -56,8 +56,12 @@ int i,j;
 }
 
 int main(){
+	int *ptr;
+	int *cptr;
 	int check;
 	int choice;
+	*ptr = &choice; // implemting use of pointers.
+	*cptr = &check;
 	printCar();
  
 	while (1) {
@@ -67,8 +71,8 @@ int main(){
 	        printf("3. View Leaderboard\n");
 	        printf("4. Exit\n");
 	        printf("Enter your choice: ");
-	        check = scanf("%d", &choice); //scanf returns 1 after successfulll input of data.
-	        if (check!=1){
+	        *cptr = scanf("%d", ptr); //scanf returns 1 after successfulll input of data.
+	        if (*cptr!=1){
 	        	printf("Invalid data type");
 	        	while (getchar() != '\n'); // discard the left over invalid data in input buffer
 				// clearing the input buffer for valid data
