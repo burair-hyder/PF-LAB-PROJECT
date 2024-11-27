@@ -36,25 +36,6 @@ void update_score(char name[100],FILE *p1);
 void leaderbord();
 
 
-void display_road(int car_position, int obstacles[] ) {
-	system("cls"); //clears screen
-int i,j;
-    for (i = 0; i < ROAD_HEIGHT; i++) {
-        printf("                ");  //centering the game
-
-        for (j = 0; j < ROAD_WIDTH; j++) {
-            if (i == ROAD_HEIGHT - 1 && j == car_position) {
-                printf("A"); 
-            } else if (obstacles[i] == j && j!=0) {
-                printf("X");
-            } else {
-                printf("%c", road[i][j]);
-            }
-        }
-        printf("\n");
-    }     
-}
-
 int main(){
 	int *ptr;
 	int *cptr;
@@ -65,22 +46,22 @@ int main(){
 	printCar();
  
 	while (1) {
-	        printf("\nMenu:\n");
-	        printf("1. Sign Up\n");
-	        printf("2. Log In and Play Game\n");
-	        printf("3. View Leaderboard\n");
-	        printf("4. Exit\n");
-	        printf("Enter your choice: ");
+	        printf("\t\t\nMenu:\n");
+	        printf("\t\t1. Sign Up\n");
+	        printf("\t\t2. Log In and Play Game\n");
+	        printf("\t\t3. View Leaderboard\n");
+	        printf("\t\t4. Exit\n");
+	        printf("\t\tEnter your choice: ");
 	        *cptr = scanf("%d", ptr); //scanf returns 1 after successfulll input of data.
 	        if (*cptr!=1){
-	        	printf("Invalid data type");
+	        	printf("\t\tInvalid data type");
 	        	while (getchar() != '\n'); // discard the left over invalid data in input buffer
 				// clearing the input buffer for valid data
 				// if not done. indefinte loop or unexpected behaviour
 				
 			}
 			else if( choice< 1 || choice >4){
-				printf("Out Of Valid Range!");
+				printf("\t\tOut Of Valid Range!");
 				
 			
 			}
@@ -98,10 +79,10 @@ int main(){
 	                leaderbord();
 	                break;
 	            case 4:
-	                printf("Exiting program.\n");
+	                printf("\t\tExiting program.\n");
 	                return 0;
 	            default:
-	                printf("Invalid choice! Please try again.\n");
+	                printf("\t\tInvalid choice! Please try again.\n");
 	                break;
 	        }
     }
@@ -126,6 +107,25 @@ void init_road() {
 }
 
  
+
+void display_road(int car_position, int obstacles[] ) {
+	system("cls"); //clears screen
+int i,j;
+    for (i = 0; i < ROAD_HEIGHT; i++) {
+        printf("                ");  //centering the game
+
+        for (j = 0; j < ROAD_WIDTH; j++) {
+            if (i == ROAD_HEIGHT - 1 && j == car_position) {
+                printf("A"); 
+            } else if (obstacles[i] == j && j!=0) {
+                printf("X");
+            } else {
+                printf("%c", road[i][j]);
+            }
+        }
+        printf("\n");
+    }     
+}
 
 void move_obstacles(int* obstacles) {
 	int i;
@@ -155,10 +155,13 @@ int play(){
 
     srand(time(0)); // seconds from 1970;  neceesary for rand();
     init_road(); // sets border and intializes the road
-
-
-    
-    printf("Press 1 To Enter The Game or  0 to exit: ");
+	printf(" \n");
+	printf("\t\tGame Controls:\n");
+	printf("\t\tPress 'A' to Move Right.\n");
+	printf("\t\tPress D to Move Left.\n");
+	printf("\t\tPress P to Pause Game.\n");
+    printf(" \n");
+    printf("\t\tPress 1 To Enter The Game or  0 to exit: ");
     int num; // to store input
     int res; // to store return from scanf
 	while(1){
