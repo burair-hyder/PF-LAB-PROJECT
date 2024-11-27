@@ -5,3 +5,8 @@ void play_mp3(const char *filename) {
 
     mciSendString("play myMP3 repeat", NULL, 0, NULL);  // Play in a loop (background)
 }
+
+
+// code used to stop and close music 
+	mciSendString("stop myMP3", NULL, 0, NULL);
+	mciSendString("close myMP3", NULL, 0, NULL);
