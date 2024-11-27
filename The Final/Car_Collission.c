@@ -37,10 +37,10 @@ void leaderbord();
 
 
 void display_road(int car_position, int obstacles[] ) {
-	system("cls"); 
+	system("cls"); //clears screen
 int i,j;
     for (i = 0; i < ROAD_HEIGHT; i++) {
-        printf("                "); 
+        printf("                ");  //centering the game
 
         for (j = 0; j < ROAD_WIDTH; j++) {
             if (i == ROAD_HEIGHT - 1 && j == car_position) {
@@ -57,48 +57,49 @@ int i,j;
 
 int main(){
 	int check;
-    
-    printCar();
-    int choice;
-    while (1) {
-        printf("\nMenu:\n");
-        printf("1. Sign Up\n");
-        printf("2. Log In and Play Game\n");
-        printf("3. View Leaderboard\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
-        check = scanf("%d", &choice);
-        if (check!=1){
-        	printf("Invalid data type");
-        	while (getchar() != '\n'); // discard the left over invalid data in input buffer
-			// clearing the input buffer for valid data
+	int choice;
+	printCar();
+ 
+	while (1) {
+	        printf("\nMenu:\n");
+	        printf("1. Sign Up\n");
+	        printf("2. Log In and Play Game\n");
+	        printf("3. View Leaderboard\n");
+	        printf("4. Exit\n");
+	        printf("Enter your choice: ");
+	        check = scanf("%d", &choice); //scanf returns 1 after successfulll input of data.
+	        if (check!=1){
+	        	printf("Invalid data type");
+	        	while (getchar() != '\n'); // discard the left over invalid data in input buffer
+				// clearing the input buffer for valid data
+				// if not done. indefinte loop or unexpected behaviour
+				
+			}
+			else if( choice< 1 || choice >4){
+				printf("Out Of Valid Range!");
+				
 			
-		}
-		else if( choice< 1 || choice >4){
-			printf("Out Of Valid Range!");
+			}
 			
-		
-		}
-		
-		else{
-		
-        switch (choice) {
-            case 1:
-                sign_up();
-                break;
-            case 2:
-                sign_in();
-                break;
-            case 3:
-                leaderbord();
-                break;
-            case 4:
-                printf("Exiting program.\n");
-                return 0;
-            default:
-                printf("Invalid choice! Please try again.\n");
-                break;
-        }
+			else{
+			
+	        switch (choice) {
+	            case 1:
+	                sign_up();
+	                break;
+	            case 2:
+	                sign_in();
+	                break;
+	            case 3:
+	                leaderbord();
+	                break;
+	            case 4:
+	                printf("Exiting program.\n");
+	                return 0;
+	            default:
+	                printf("Invalid choice! Please try again.\n");
+	                break;
+	        }
     }
     
         
@@ -112,7 +113,7 @@ void init_road() {
     for (i = 0; i < ROAD_HEIGHT; i++) {
         for (j = 0; j < ROAD_WIDTH; j++) {
             if (j == 0 || j == ROAD_WIDTH - 1) {
-                road[i][j] = '|'; 
+                road[i][j] = '|';  // setting border on left and right side of road
             } else {
                 road[i][j] = ' ';
             }
@@ -138,63 +139,63 @@ int check_collision(int car_position, int* obstacles) {
 
 void pause_game() {
     printf("Game Paused. Press any key to continue...\n");    
-    _getch();  // inputs a character .. waits for input
+    _getch();  // this function inputs a character .. waits for input
 }
 
 int play(){
 	int car_position = CAR_POS; // width /2
-    int obstacles[ROAD_HEIGHT] = {0};
+    int obstacles[ROAD_HEIGHT] = {0}; // sets values of obstacles to zero
     int game_over = 0;
     int score = 0;
-    int delay = 100; 
+    int delay = 100;  // intial delay 
 
     srand(time(0)); // seconds from 1970;  neceesary for rand();
-    init_road();
+    init_road(); // sets border and intializes the road
 
 
     
     printf("Press 1 To Enter The Game or  0 to exit: ");
-    int num;
-    int res;
+    int num; // to store input
+    int res; // to store return from scanf
 	while(1){
-		res = scanf("%d",&num);
+		res = scanf("%d",&num); // inputs untill num is 0 or 1.
 		while(getchar()!='\n'); // clear input buffer for new input
 		
-		if( res!=1){
+		if( res!=1){ // means not successfull input. user entered wrong data type . for e.g string
 			printf("Ivalid DataType\n Please Enter 1 to enter game or 0 to exit");
 		}
-		else if (num!=1 && num!=0){
+		else if (num!=1 && num!=0){ // num is not 1 and num is also not zero then 
 			printf("Out of Range\n");
 			printf("Enter 1 to Enter game or 0 to exit");
 	}
 		else{
-			if (num==0){
-				return 0;  
+			if (num==0){ 
+				return 0;  // exit play module
 			}
-			break;
+			break; // breaks the loop if num ==1.
 		}
 		
 	}
 
-	    	
+	// continuationn of code only possible is num ==1 else it would have returned already.
 	    	play_mp3("C:\\Users\\dell\\Desktop\\PF Project\\Car Final\\start.mp3");
-	    	Sleep(800);
+	    	Sleep(800); 
 	    	
 	
 	
-	        printf("               _____ \n");
+	    printf("               _____ \n");
 	    printf("              |___ / \n");
 	    printf("                |_ \\ \n");
 	    printf("               ___) |\n");
 	    printf("              |____/ \n");
 	    	Sleep(1100);
-		printf("               ____  \n");
+	    printf("               ____  \n");
 	    printf("              |___ \\ \n");
 	    printf("                __) | \n");
 	    printf("               / __/ \n");
 	    printf("              |_____| \n");
 	    	Sleep(1100);
-		printf("                ___     \n");
+            printf("                ___     \n");
 	    printf("               / / |    \n");
 	    printf("              /_/| |     \n");
 	    printf("                 | |     \n");
@@ -234,7 +235,7 @@ int play(){
 	
 	            display_road(car_position, obstacles); // ouput current state of road
 	            
-	           printf("                Score: %d\n", score++); 
+	           printf("                Score: %d\n", score++);  // outputs real time score
 	
 	            // Gradually decrease delay to increase speed
 	            if (score % 10 == 0 && delay > 0) {
@@ -261,11 +262,7 @@ int play(){
 return score; // returns score to update score in files
 }
 
-//FILE HANDLING FUNCTIONS
-void sign_up();
-void sign_in();
-void update_score(char name[100],FILE *p1);
-void leaderbord();
+
 
 void sign_up(){
 	FILE *p1=fopen("data1.txt","a+");
@@ -398,7 +395,7 @@ void leaderbord(){
 
 void printCar() {
 	
-	printf("................................................................................................................................\n");
+    printf("................................................................................................................................\n");
     printf(":                                                                                                                              :\n");
     printf(":                                                                                                                              :\n");
     printf(":                                                                                                                              :\n");
@@ -425,8 +422,7 @@ void printCar() {
     printf(":                                                                                                                              :\n");
     printf(":                                                                                                                              :\n");
     printf(":                                                                                                                              :\n");
-   
-	printf("................................................................................................................................\n");
+    printf("................................................................................................................................\n");
 
     printf("\n");
     printf("\n");
@@ -439,8 +435,8 @@ void printCar() {
     printf("		  |_/ \\\\________/ \\\\___|	    	 |_/ \\\\________/ \\\\__|\n");
     printf("		 ___\\_/_________\\_/______	  +     ___\\_/_________\\_/______\n");
     
-	printf("                ______			          ______\n");                
-	printf("               //  ||\\\\	                         //  ||\\\\\n");            
+    printf("                ______			          ______\n");                
+    printf("               //  ||\\\\	                         //  ||\\\\\n");            
     printf("      ________//___||_\\\\____	        ________//___||_\\\\____\n");					
     printf("     )  _          _    \\  |           )  _       _      \\   |\n");					
     printf("     |_/ \\\\________/ \\\\___|	       |_/ \\\\________/ \\\\___|\n");					
@@ -454,8 +450,10 @@ void printCar() {
 
 void play_mp3(const char *filename) {
     char command[256];
-    sprintf(command, "open \"%s\" type mpegvideo alias myMP3", filename);
-    mciSendString(command, NULL, 0, NULL);  // Open the MP3 file
+    sprintf(command, "open \"%s\" type mpegvideo alias myMP3", filename); //sprintf formats the given string .
+	// stores open (filename) type mpegvideo alias myMP3 in command
+    mciSendString(command, NULL, 0, NULL);  // Open the MP3 file 
 
-    mciSendString("play myMP3 repeat", NULL, 0, NULL);  // Play in a loop (background)
+    mciSendString("play myMP3 repeat", NULL, 0, NULL);  // Play in a loop (background) (repeat)
+	// myMP3 alias for filename
 }
