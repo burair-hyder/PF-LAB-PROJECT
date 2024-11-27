@@ -1,10 +1,10 @@
 #include <stdio.h> // for input and output
-#include <stdlib.h> // for rand function
+#include <stdlib.h> // for rand function and srand function
 #include <time.h> // for time(0) // 1970 abhe tak jitnay seconds 
 #include <string.h>  // for strcpy,strcmp,strlen
 #include <conio.h>   // For _kbhit() and _getch()
 #include <windows.h> // For Sleep()
-#include <limits.h> // for INT_MAX AND INT_MIN
+#include <limits.h> // for INT_MAX AND INT_MIN  (not used)
 // global
 #define ROAD_WIDTH 40 // columns
 #define ROAD_HEIGHT 20 // rows
