@@ -60,8 +60,8 @@ int main(){
 	int *cptr;
 	int check;
 	int choice;
-	*ptr = &choice; // implemting use of pointers.
-	*cptr = &check;
+	ptr = &choice; // implemting use of pointers.
+	cptr = &check;
 	printCar();
  
 	while (1) {
